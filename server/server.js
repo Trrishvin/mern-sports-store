@@ -48,10 +48,17 @@ try {
   }
 
   await connectDB();
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
 } catch (error) {
   console.error("Failed to start server:", error);
   process.exitCode = 1;
 }
+
+// On Vercel the default export handles requests directly; only bind a
+// port for local development.
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
+
+export default app;

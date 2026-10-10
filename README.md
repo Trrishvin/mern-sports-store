@@ -127,7 +127,32 @@ cd client
 npm run dev
 ```
 
-Open **http://localhost:5173** in your browser.
+Open **http://localhost:5173** in your browser. The Vite dev server proxies
+`/api` requests to the API at `http://localhost:5000` automatically, so no
+extra configuration is needed for local development.
+
+## Deploy to Vercel
+
+This repo is configured as a Vercel **services** project (see `vercel.json`):
+the `client` service (Vite) serves the React app, and the `server` service
+(Express) handles `/api/*` routes on the same domain.
+
+To deploy:
+
+1. Push the repository to GitHub.
+2. In [Vercel](https://vercel.com/new), import the repository — Vercel
+   auto-detects the services setup from `vercel.json`.
+3. Add these environment variables for the **server** service (Project
+   Settings → Environment Variables):
+   - `MONGO_URI` — your MongoDB Atlas connection string
+   - `JWT_SECRET` — a long random secret
+   - `JWT_EXPIRES_IN` — e.g. `7d`
+4. Deploy. The client and API share one domain; the client calls the API at
+   the relative path `/api`, which Vercel routes to the server service.
+
+To test the full services setup locally, use
+[`vercel dev`](https://vercel.com/docs/services) instead of running `npm run
+dev` in each folder.
 
 ## API Endpoints
 
