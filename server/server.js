@@ -50,6 +50,7 @@ try {
   await connectDB();
 } catch (error) {
   console.error("Failed to start server:", error);
+  app.locals.dbError = error.message;
   process.exitCode = 1;
 }
 

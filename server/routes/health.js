@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const router = Router();
 
-router.get("/", (_req, res) => {
+router.get("/", (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
 
   res.status(databaseConnected ? 200 : 503).json({
@@ -11,6 +11,7 @@ router.get("/", (_req, res) => {
     data: {
       status: databaseConnected ? "ok" : "unavailable",
       database: databaseConnected ? "connected" : "disconnected",
+      ...(databaseConnected ? {} : { error: req.app.locals.dbError || "not connected yet" }),
     },
     message: databaseConnected
       ? "API and database are healthy"
